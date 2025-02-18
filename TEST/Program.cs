@@ -7,6 +7,8 @@ using TEST.src.OopPrinciples.Coupling;
 using TEST.src.OopPrinciples.Encapsulation;
 using TEST.src.OopPrinciples.Inheritance;
 using TEST.src.OopPrinciples.Polymorphism;
+using TEST.src.SOLID.bOCP;
+using TEST.src.SOLID.cLSP;
 
 BadBankAccount badBankAccount = new BadBankAccount();
 
@@ -106,3 +108,80 @@ orderFromSms.PlaceOrder();
 */
 var carCo = new TEST.src.OopPrinciples.Composition.Car();
 carCo.StartCar();
+
+/*
+    SRP: Single Responsibility Principle=> Le principe de responsabilité unique te permet de t’assurer qu’une fonction ne fait qu’une seule et unique chose, mais qu’elle le fait bien.
+	=> Diviser pour mieux regnier en créant plusieurs classes avec leurs méthodes propres, plutôt qu'un four tout de plusieurs fonctionnalités dans une seule classe
+*/
+
+/*
+    OCP : Open/Closed Principle: (O) Le principe Ouvert/Fermé te demande de ne pas modifier le comportement d’une action en fonction d’un paramètre, mais plutôt d’étendre 
+    les capacités dudit
+        paramètre grâce à une fonction définie en amont.
+        => On a une méthode qui comporte un objet en entrée, et suivant sont typeOf, on est obligé de rajouter à chaque fois un case si on rajoute un autre objet
+        => On utilise une interface dans chaque classe qui établie une méthodes patagée par l'ensemble des classes, qu'on vient ajouter à la classe existante d'ou l'étendre
+         et la fermer à la modification
+*/
+
+/*
+	LSP : Liskov’s Substitution Principle (LSP): (L) Le principe de substitution de Liskov te permet d’interchanger les enfants d’une classe sans que cela ait
+     d’incidence sur l’exécution du code.
+	=> En gros la classe abstraite, ou l'interface doit être la même chose en terme de paramètres d'entrée et de sortie dans les classes qui en héritent
+*/
+
+//BAD: Liskov Substitution principle: on doit pouvoir substituer une superclasse (Rectangle) par une sub classe (Square) et avoir les mêmes resultats, ici ce n'est pas possible !
+// var rect = new Rectangle();
+// rect.Height = 10;
+// rect.Width = 5;
+
+// Console.WriteLine("Expected area = 10 * 5 = 50");
+// Console.WriteLine(rect.Area);
+
+// var square = new Square();
+// rect.Height = 10;
+// rect.Width = 5;
+
+// Console.WriteLine("Expected area = 10 * 5 = 50");
+// Console.WriteLine(square.Area);
+
+//GOOD
+TEST.src.SOLID.cLSP.Shape rectangle = new TEST.src.SOLID.cLSP.Rectangle { Width = 5, Height = 4 };
+Console.WriteLine($"Area of  the rectangle: {rectangle.Area}");
+
+Square square = new Square { SideLength = 5 };
+Console.WriteLine($"Area of the square: {square.Area}");
+
+/*
+	ISP : Interface Segregation Principle (ISP): (I) Le principe de ségrégation des interfaces te demande de séparer les actions le plus possible.
+	=> Il vaut mieux faire plusieurs petites interfaces qu'une grosse pour éviter d'avoir à implémenter ou à surcharger une classe qui en hérite
+*/
+
+//BAD: Unhandled exception. System.InvalidOperationException: Volume not applicable to the 2D shapes at TEST.src.SOLID.dISP.Circle.Volume() 
+// in D:\DEVELOPPEMENT\Dev 2025\TEST\TEST\src\SOLID\dISP\Cicle.cs:line 15
+// var circle = new TEST.src.SOLID.dISP.Circle();
+// circle.Radius = 10;
+// Console.WriteLine(circle.Area());
+//Console.WriteLine(circle.Volume()); // Le volume n'existe pas dans un cercle en 2D du coup ça throw l'exception qu'on a implémentée !
+
+// GOOD
+var circle = new TEST.src.SOLID.dISP.Circle();
+circle.Radius = 10;
+Console.WriteLine(circle.Area());
+
+var sphere = new TEST.src.SOLID.dISP.Sphere();
+sphere.Radius = 10;
+Console.WriteLine(sphere.Area());
+
+/*
+	DIP : Dependency Inversion Principle (DIP): (D) Le principe d’inversion de dépendance préconise de passer des abstractions en paramètre (des contrats grâce aux interfaces)
+	plutôt que les objets eux-mêmes.
+	=> On passe une interface au lieu d'un objet en paramètre
+*/
+
+//BAD: le fait de mettre en paramètre d'entrée un classe concrète ça restreint le choix de l'implémentation de classe !
+// var carDip = new TEST.src.SOLID.eDIP.Car(new TEST.src.SOLID.eDIP.ElectricEngine()); // Erreur
+
+//GOOD: introduire une abstraction ou interface à la place d'une implémentation concrète d'un objet !
+var carDip = new TEST.src.SOLID.eDIP.Car(new TEST.src.SOLID.eDIP.ElectricEngine()); // OK !
+
+carDip.StartCar();
